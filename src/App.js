@@ -6,65 +6,65 @@ import * as api from "./services/api";
 
 function App() {
   const [options, setOptions] = useState([]);
-  const [fromCurrencyCode, setFromCurrencyCode] = useState();
+  const [rates, setRates] = useState([]);
+  const [fromCurrencyCode, setFromCurrencyCode] = useState(1);
   const [toCurrencyCode, setToCurrencyCode] = useState();
-  const [sum, setSum] = useState(1);
-  const [sumFromCurrency, setSumFromCurrency] = useState(true);
-  const [exchangeRate, setExchangeRate] = useState();
-console.log(exchangeRate)
+  const [currentFromCurrency, setFromCurrentCurrency] = useState("UAH");
+  const [currentToCurrency, setToCurrentCurrency] = useState();
+
   const [currencyEl, setToCurrencyEl] = useState();
-
-let toSum, fromSum;
-
-if(sumFromCurrency) {
-  fromSum = sum;
-  toSum = sum * exchangeRate;
-} else {
-  toSum = sum;
-  fromSum = sum / exchangeRate
-}
 
 
   useEffect(() => {
     api.fetchCurrency().then((data) => {
-      console.log(data);
       const currencyExchange = data.map((el) => el.rate);
       const currencyCodes = data.map((el) => el.cc);
+
+      const newObjWithRates = {};
+      for (var i = 0; i < currencyCodes.length; i++) {
+        newObjWithRates[currencyCodes[i]] = currencyExchange[i];
+        newObjWithRates["UAH"] = 1.0;
+      }
+      console.log(newObjWithRates);
+      setRates(newObjWithRates);
+
       const first = currencyCodes[0];
-      setOptions(["UAH", ...currencyCodes]);
-      setFromCurrencyCode("UAH");
-      setToCurrencyCode(first);
-      setExchangeRate(currencyExchange[0]);
+      setOptions([...Object.keys(newObjWithRates)]);
 
+      setToCurrentCurrency(first);
 
-      const ss = data.map((el) => el);
-      console.log(ss);
-      setToCurrencyEl(ss);
+      const separateElement = data.map((el) => el);
+      setToCurrencyEl(separateElement);
     });
   }, []);
 
-
-  useEffect(() => {
-
-  },[toSum, fromSum])
-
-  const handleChangeToCurrency = (e) => {
-    setToCurrencyCode(e.target.value);
+  const handleFromChangeSum = (fromCurrencyCode) => {
+    setToCurrencyCode(
+      (fromCurrencyCode * rates[currentFromCurrency]) / rates[currentToCurrency]
+    );
+    setFromCurrencyCode(fromCurrencyCode);
   };
 
-  const handleChangeFromCurrency = (e) => {
-    setFromCurrencyCode(e.target.value);
+  const handleChangeFromCurrency = (currentFromCurrency) => {
+    setToCurrencyCode(
+      (fromCurrencyCode * rates[currentToCurrency]) / rates[currentFromCurrency]
+    );
+    setFromCurrentCurrency(currentFromCurrency);
   };
 
-  const handleFromChangeSum = (e) => {
-    setSum(e.target.value)
-    setSumFromCurrency(true)
-  }
+  const handleToChangeSum = (toCurrencyCode) => {
+    setFromCurrencyCode(
+      (toCurrencyCode * rates[currentFromCurrency]) / rates[currentToCurrency]
+    );
+    setToCurrencyCode(toCurrencyCode);
+  };
 
-  const handleToChangeSum = (e) => {
-    setSum(e.target.value)
-    setSumFromCurrency(false)
-  }
+  const handleChangeToCurrency = (currentToCurrency) => {
+    setFromCurrencyCode(
+      (toCurrencyCode * rates[currentFromCurrency]) / rates[currentToCurrency]
+    );
+    setToCurrentCurrency(currentToCurrency);
+  };
 
   return (
     <div>
@@ -72,18 +72,18 @@ if(sumFromCurrency) {
       <h1>Конвертер валют</h1>
       <CurrencyElement
         options={options}
-        selectCurrency={fromCurrencyCode}
+        selectCurrency={currentFromCurrency}
         handleChangeCurrency={handleChangeFromCurrency}
         handleChangeSum={handleFromChangeSum}
-        sum={fromSum}
+        sum={fromCurrencyCode}
       />
       <div>=</div>
       <CurrencyElement
         options={options}
-        selectCurrency={toCurrencyCode}
+        selectCurrency={currentToCurrency}
         handleChangeCurrency={handleChangeToCurrency}
         handleChangeSum={handleToChangeSum}
-        sum={toSum}
+        sum={toCurrencyCode}
       />
     </div>
   );

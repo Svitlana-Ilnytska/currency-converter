@@ -9,8 +9,8 @@ function CurrencyElement({
 }) {
   return (
     <div>
-      <input type="nuber" value={sum} onChange={handleChangeSum} />
-      <select value={selectCurrency} onChange={handleChangeCurrency}>
+      <input type="number" value={sum} onChange={(e) => handleChangeSum(e.target.value)} />
+      <select value={selectCurrency} onChange={(e) => handleChangeCurrency(e.target.value)}>
         {options.map((option) => (
           <option value={option} key={option}>
             {option}
