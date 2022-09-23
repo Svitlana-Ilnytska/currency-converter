@@ -1,29 +1,62 @@
-.currencyNav {
-    top: 0;
-    left: 0;
-    position: sticky;
-    z-index: 1100;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 64px;
-    padding-right: 24px;
-    padding-left: 24px;
-    padding-top: 12px;
-    padding-bottom: 12px;
-    color: #fff;
-    background-color: #3fb56a;
-    box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
-      0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
-  }
+.header {
+  font-family: "Montserrat", sans-serif;
+  padding: 12px 24px;
+  color: #fffcfc;
+  background: linear-gradient(#2c233a, #504881);
+  box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
+    0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+}
 
-  .currencyBoxes {
-    display: flex;
-    align-items: center;
-  }
-  
-  .box {
-    border: 0.5px solid #fff;
-    border-radius: 6px;
-    padding: 5px;
-  }
+.currencyBoxes {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.boxWithLogo {
+  display: flex;
+  align-items: center;
+}
+
+.boxes {
+  display: flex;
+}
+
+.box {
+  padding: 5px;
+}
+
+.currentCurrency {
+  color: #fffcfc;
+  font-size: 13px;
+}
+
+.currentRate {
+  padding: 5px;
+}
+
+.currentCurrency:hover .currentRate {
+  color: #e5b349;
+}
+
+p {
+  position: relative;
+  color: #484848;
+  font-size: 1.25rem;
+  text-decoration: none;
+}
+p::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  width: 100%;
+  height: 1px;
+  background-color: #e5b349;
+}
+
+p:hover:before {
+  width: 100%;
+}
+
+

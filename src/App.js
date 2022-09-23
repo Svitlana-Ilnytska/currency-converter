@@ -1,19 +1,19 @@
 import { React, useEffect, useState } from "react";
 import Header from "./components/Header/Header";
 import CurrencyElement from "./components/CurrencyElement/CurrencyElement";
+import { ReactComponent as Arrows } from "./assets/arrows.svg";
 
 import * as api from "./services/api";
+import css from "./App.module.css";
 
 function App() {
   const [options, setOptions] = useState([]);
   const [rates, setRates] = useState([]);
   const [fromCurrencyCode, setFromCurrencyCode] = useState(1);
-  const [toCurrencyCode, setToCurrencyCode] = useState();
+  const [toCurrencyCode, setToCurrencyCode] = useState("");
   const [currentFromCurrency, setFromCurrentCurrency] = useState("UAH");
   const [currentToCurrency, setToCurrentCurrency] = useState();
-
   const [currencyEl, setToCurrencyEl] = useState();
-
 
   useEffect(() => {
     api.fetchCurrency().then((data) => {
@@ -25,12 +25,10 @@ function App() {
         newObjWithRates[currencyCodes[i]] = currencyExchange[i];
         newObjWithRates["UAH"] = 1.0;
       }
-      console.log(newObjWithRates);
       setRates(newObjWithRates);
 
       const first = currencyCodes[0];
       setOptions([...Object.keys(newObjWithRates)]);
-
       setToCurrentCurrency(first);
 
       const separateElement = data.map((el) => el);
@@ -40,28 +38,40 @@ function App() {
 
   const handleFromChangeSum = (fromCurrencyCode) => {
     setToCurrencyCode(
-      (fromCurrencyCode * rates[currentFromCurrency]) / rates[currentToCurrency]
+      (
+        (fromCurrencyCode * rates[currentFromCurrency]) /
+        rates[currentToCurrency]
+      ).toFixed(4)
     );
     setFromCurrencyCode(fromCurrencyCode);
   };
 
   const handleChangeFromCurrency = (currentFromCurrency) => {
     setToCurrencyCode(
-      (fromCurrencyCode * rates[currentToCurrency]) / rates[currentFromCurrency]
+      (
+        (fromCurrencyCode * rates[currentToCurrency]) /
+        rates[currentFromCurrency]
+      ).toFixed(4)
     );
     setFromCurrentCurrency(currentFromCurrency);
   };
 
   const handleToChangeSum = (toCurrencyCode) => {
     setFromCurrencyCode(
-      (toCurrencyCode * rates[currentFromCurrency]) / rates[currentToCurrency]
+      (
+        (toCurrencyCode * rates[currentFromCurrency]) /
+        rates[currentToCurrency]
+      ).toFixed(4)
     );
     setToCurrencyCode(toCurrencyCode);
   };
 
   const handleChangeToCurrency = (currentToCurrency) => {
     setFromCurrencyCode(
-      (toCurrencyCode * rates[currentFromCurrency]) / rates[currentToCurrency]
+      (
+        (toCurrencyCode * rates[currentFromCurrency]) /
+        rates[currentToCurrency]
+      ).toFixed(4)
     );
     setToCurrentCurrency(currentToCurrency);
   };
@@ -69,22 +79,28 @@ function App() {
   return (
     <div>
       <Header currencyEl={currencyEl} />
-      <h1>Конвертер валют</h1>
-      <CurrencyElement
-        options={options}
-        selectCurrency={currentFromCurrency}
-        handleChangeCurrency={handleChangeFromCurrency}
-        handleChangeSum={handleFromChangeSum}
-        sum={fromCurrencyCode}
-      />
-      <div>=</div>
-      <CurrencyElement
-        options={options}
-        selectCurrency={currentToCurrency}
-        handleChangeCurrency={handleChangeToCurrency}
-        handleChangeSum={handleToChangeSum}
-        sum={toCurrencyCode}
-      />
+      <div className={css.main}>
+        <h1 className={css.title}>Конвертер валют</h1>
+        <div className={css.boxes}>
+          <CurrencyElement
+            options={options}
+            selectCurrency={currentFromCurrency}
+            handleChangeCurrency={handleChangeFromCurrency}
+            handleChangeSum={handleFromChangeSum}
+            sum={fromCurrencyCode}
+          />
+          <div className={css.arrows}>
+            <Arrows />
+          </div>
+          <CurrencyElement
+            options={options}
+            selectCurrency={currentToCurrency}
+            handleChangeCurrency={handleChangeToCurrency}
+            handleChangeSum={handleToChangeSum}
+            sum={toCurrencyCode}
+          />
+        </div>
+      </div>
     </div>
   );
 }
