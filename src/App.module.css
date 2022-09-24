@@ -12,7 +12,7 @@ body {
   font-weight: 400;
   font-size: 32px;
   margin: 0;
-margin-bottom: 50px;
+  margin-bottom: 50px;
 }
 
 .main {
@@ -32,4 +32,9 @@ margin-bottom: 50px;
   align-items: flex-end;
   justify-content: center;
   padding-bottom: 20px;
+  width: 100px;
+}
+
+.svg {
+  width: 67px;
 }

@@ -9,7 +9,7 @@ import css from "./App.module.css";
 function App() {
   const [options, setOptions] = useState([]);
   const [rates, setRates] = useState([]);
-  const [fromCurrencyCode, setFromCurrencyCode] = useState(1);
+  const [fromCurrencyCode, setFromCurrencyCode] = useState("");
   const [toCurrencyCode, setToCurrencyCode] = useState("");
   const [currentFromCurrency, setFromCurrentCurrency] = useState("UAH");
   const [currentToCurrency, setToCurrentCurrency] = useState();
@@ -49,8 +49,8 @@ function App() {
   const handleChangeFromCurrency = (currentFromCurrency) => {
     setToCurrencyCode(
       (
-        (fromCurrencyCode * rates[currentToCurrency]) /
-        rates[currentFromCurrency]
+        (fromCurrencyCode * rates[currentFromCurrency]) /
+        rates[currentToCurrency]
       ).toFixed(4)
     );
     setFromCurrentCurrency(currentFromCurrency);
@@ -59,8 +59,8 @@ function App() {
   const handleToChangeSum = (toCurrencyCode) => {
     setFromCurrencyCode(
       (
-        (toCurrencyCode * rates[currentFromCurrency]) /
-        rates[currentToCurrency]
+        (toCurrencyCode * rates[currentToCurrency]) /
+        rates[currentFromCurrency]
       ).toFixed(4)
     );
     setToCurrencyCode(toCurrencyCode);
@@ -69,8 +69,8 @@ function App() {
   const handleChangeToCurrency = (currentToCurrency) => {
     setFromCurrencyCode(
       (
-        (toCurrencyCode * rates[currentFromCurrency]) /
-        rates[currentToCurrency]
+        (toCurrencyCode * rates[currentToCurrency]) /
+        rates[currentFromCurrency]
       ).toFixed(4)
     );
     setToCurrentCurrency(currentToCurrency);
@@ -90,7 +90,7 @@ function App() {
             sum={fromCurrencyCode}
           />
           <div className={css.arrows}>
-            <Arrows />
+            <Arrows className={css.svg} />
           </div>
           <CurrencyElement
             options={options}
