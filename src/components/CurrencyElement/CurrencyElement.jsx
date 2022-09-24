@@ -8,17 +8,19 @@ function CurrencyElement({
   handleChangeCurrency,
   sum,
   handleChangeSum,
+  currentCurrencyName,
 }) {
   return (
     <div className={css.box}>
+      <label className={css.label}>{currentCurrencyName}</label>
       <select
         className={css.select}
         value={selectCurrency}
         onChange={(e) => handleChangeCurrency(e.target.value)}
       >
-        {options.map((option) => (
-          <option value={option} key={option}>
-            {option}
+        {options?.map((option) => (
+          <option value={option.cc} key={option.cc}>
+            {option.cc}
           </option>
         ))}
       </select>

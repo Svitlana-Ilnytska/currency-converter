@@ -53,3 +53,9 @@ select:focus {
   outline-offset: 0;
   border: 1.5px solid #e5b349;
 }
+
+.label {
+  color: #262432;
+  font-size: 13px;
+  padding-left: 10px;
+}

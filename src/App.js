@@ -6,35 +6,46 @@ import { ReactComponent as Arrows } from "./assets/arrows.svg";
 import * as api from "./services/api";
 import css from "./App.module.css";
 
+const obj = { txt: "Українська гривня", cc: "UAH", rate: 1 };
+
 function App() {
-  const [options, setOptions] = useState([]);
   const [rates, setRates] = useState([]);
+  const [currencyEl, setToCurrencyEl] = useState();
   const [fromCurrencyCode, setFromCurrencyCode] = useState("");
   const [toCurrencyCode, setToCurrencyCode] = useState("");
   const [currentFromCurrency, setFromCurrentCurrency] = useState("UAH");
-  const [currentToCurrency, setToCurrentCurrency] = useState();
-  const [currencyEl, setToCurrencyEl] = useState();
+  const [currentFromCurrencyName, setFromCurrentCurrencyName] =
+    useState("Українська гривня");
+  const [currentToCurrency, setToCurrentCurrency] = useState("USD");
+  const [currentToCurrencyName, setToCurrentCurrencyName] =
+    useState("Долар США");
 
   useEffect(() => {
-    api.fetchCurrency().then((data) => {
-      const currencyExchange = data.map((el) => el.rate);
-      const currencyCodes = data.map((el) => el.cc);
-
-      const newObjWithRates = {};
-      for (var i = 0; i < currencyCodes.length; i++) {
-        newObjWithRates[currencyCodes[i]] = currencyExchange[i];
-        newObjWithRates["UAH"] = 1.0;
-      }
-      setRates(newObjWithRates);
-
-      const first = currencyCodes[0];
-      setOptions([...Object.keys(newObjWithRates)]);
-      setToCurrentCurrency(first);
-
-      const separateElement = data.map((el) => el);
-      setToCurrencyEl(separateElement);
-    });
+    api
+      .fetchCurrency()
+      .then((data) => {
+        setToCurrencyEl([obj, ...data]);
+      })
+      .catch((error) => {
+        console.log("Trouble. Something is wrong :(", error);
+      });
   }, []);
+
+  useEffect(() => {
+    const currencyExchange = currencyEl?.map((el) => el.rate);
+    const currencyCodes = currencyEl?.map((el) => el.cc);
+
+    const newObjWithRates = {};
+    for (let i = 0; i < currencyCodes?.length; i++) {
+      newObjWithRates[currencyCodes[i]] = currencyExchange[i];
+    }
+    setRates(newObjWithRates);
+  }, [currencyEl]);
+
+  const filteredCurrentCurrency = (code) => {
+    const currency = currencyEl.filter((currency) => currency.cc === code);
+    return currency[0].txt;
+  };
 
   const handleFromChangeSum = (fromCurrencyCode) => {
     setToCurrencyCode(
@@ -47,6 +58,7 @@ function App() {
   };
 
   const handleChangeFromCurrency = (currentFromCurrency) => {
+    setFromCurrentCurrencyName(filteredCurrentCurrency(currentFromCurrency));
     setToCurrencyCode(
       (
         (fromCurrencyCode * rates[currentFromCurrency]) /
@@ -67,6 +79,7 @@ function App() {
   };
 
   const handleChangeToCurrency = (currentToCurrency) => {
+    setToCurrentCurrencyName(filteredCurrentCurrency(currentToCurrency));
     setFromCurrencyCode(
       (
         (toCurrencyCode * rates[currentToCurrency]) /
@@ -83,7 +96,8 @@ function App() {
         <h1 className={css.title}>Конвертер валют</h1>
         <div className={css.boxes}>
           <CurrencyElement
-            options={options}
+            currentCurrencyName={currentFromCurrencyName}
+            options={currencyEl}
             selectCurrency={currentFromCurrency}
             handleChangeCurrency={handleChangeFromCurrency}
             handleChangeSum={handleFromChangeSum}
@@ -93,7 +107,8 @@ function App() {
             <Arrows className={css.svg} />
           </div>
           <CurrencyElement
-            options={options}
+            currentCurrencyName={currentToCurrencyName}
+            options={currencyEl}
             selectCurrency={currentToCurrency}
             handleChangeCurrency={handleChangeToCurrency}
             handleChangeSum={handleToChangeSum}
