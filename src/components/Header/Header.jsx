@@ -5,6 +5,18 @@ import { ReactComponent as Logo } from "../../assets/logo.svg";
 
 import css from "./Header.module.css";
 
+const renderKnownCurrencies = function (element, currency) {
+  if (element.cc === currency) {
+    return (
+      <p key={element.cc} className={css.currentCurrency}>
+        {element.txt} <span className={css.currentRate}>{element.rate}</span>
+      </p>
+    );
+  } else {
+    return null;
+  }
+};
+
 function Header({ currencyEl }) {
   return (
     <header className={css.header}>
@@ -15,24 +27,10 @@ function Header({ currencyEl }) {
         </div>
         <div className={css.boxes}>
           <div className={css.box}>
-            {currencyEl?.map(
-              (el) =>
-                el.cc === "USD" && (
-                  <p key={el.cc} className={css.currentCurrency}>
-                    {el.txt} <span className={css.currentRate}>{el.rate}</span>
-                  </p>
-                )
-            )}
+            {currencyEl?.map((el) => renderKnownCurrencies(el, "USD"))}
           </div>
           <div className={css.box}>
-            {currencyEl?.map(
-              (el) =>
-                el.cc === "EUR" && (
-                  <p key={el.cc} className={css.currentCurrency}>
-                    {el.txt} <span className={css.currentRate}>{el.rate}</span>
-                  </p>
-                )
-            )}
+            {currencyEl?.map((el) => renderKnownCurrencies(el, "EUR"))}
           </div>
         </div>
       </div>

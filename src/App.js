@@ -47,12 +47,24 @@ function App() {
     return currency[0].txt;
   };
 
+  const calculationChangeSum = (
+    code,
+    firstCurrentCurrency,
+    secondCurrentCurrency
+  ) => {
+    return (
+      (code * rates[firstCurrentCurrency]) /
+      rates[secondCurrentCurrency]
+    ).toFixed(4);
+  };
+
   const handleFromChangeSum = (fromCurrencyCode) => {
     setToCurrencyCode(
-      (
-        (fromCurrencyCode * rates[currentFromCurrency]) /
-        rates[currentToCurrency]
-      ).toFixed(4)
+      calculationChangeSum(
+        fromCurrencyCode,
+        currentFromCurrency,
+        currentToCurrency
+      )
     );
     setFromCurrencyCode(fromCurrencyCode);
   };
@@ -60,20 +72,22 @@ function App() {
   const handleChangeFromCurrency = (currentFromCurrency) => {
     setFromCurrentCurrencyName(filteredCurrentCurrency(currentFromCurrency));
     setToCurrencyCode(
-      (
-        (fromCurrencyCode * rates[currentFromCurrency]) /
-        rates[currentToCurrency]
-      ).toFixed(4)
+      calculationChangeSum(
+        fromCurrencyCode,
+        currentFromCurrency,
+        currentToCurrency
+      )
     );
     setFromCurrentCurrency(currentFromCurrency);
   };
 
   const handleToChangeSum = (toCurrencyCode) => {
     setFromCurrencyCode(
-      (
-        (toCurrencyCode * rates[currentToCurrency]) /
-        rates[currentFromCurrency]
-      ).toFixed(4)
+      calculationChangeSum(
+        toCurrencyCode,
+        currentToCurrency,
+        currentFromCurrency
+      )
     );
     setToCurrencyCode(toCurrencyCode);
   };
@@ -81,10 +95,11 @@ function App() {
   const handleChangeToCurrency = (currentToCurrency) => {
     setToCurrentCurrencyName(filteredCurrentCurrency(currentToCurrency));
     setFromCurrencyCode(
-      (
-        (toCurrencyCode * rates[currentToCurrency]) /
-        rates[currentFromCurrency]
-      ).toFixed(4)
+      calculationChangeSum(
+        toCurrencyCode,
+        currentToCurrency,
+        currentFromCurrency
+      )
     );
     setToCurrentCurrency(currentToCurrency);
   };
