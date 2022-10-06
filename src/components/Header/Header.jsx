@@ -1,5 +1,3 @@
-import { React } from "react";
-
 import { ReactComponent as LogoImage } from "../../assets/vector.svg";
 import { ReactComponent as Logo } from "../../assets/logo.svg";
 

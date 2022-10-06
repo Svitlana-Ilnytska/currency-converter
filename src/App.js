@@ -1,14 +1,21 @@
-import { React, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "./components/Header/Header";
 import CurrencyElement from "./components/CurrencyElement/CurrencyElement";
 import { ReactComponent as Arrows } from "./assets/arrows.svg";
 
-import * as api from "./services/api";
+import { useGetCurrencyByDateQuery } from "./redux/currencyExchanger";
 import css from "./App.module.css";
 
 const obj = { txt: "Українська гривня", cc: "UAH", rate: 1 };
 
+const today =
+  new Date().getFullYear() +
+  ("0" + (new Date().getMonth() + 1)).slice(-2) +
+  ("0" + new Date().getDate()).slice(-2);
+
 function App() {
+  const { data } = useGetCurrencyByDateQuery(today);
+
   const [rates, setRates] = useState([]);
   const [currencyEl, setToCurrencyEl] = useState();
   const [fromCurrencyCode, setFromCurrencyCode] = useState("");
@@ -21,15 +28,10 @@ function App() {
     useState("Долар США");
 
   useEffect(() => {
-    api
-      .fetchCurrency()
-      .then((data) => {
-        setToCurrencyEl([obj, ...data]);
-      })
-      .catch((error) => {
-        console.log("Trouble. Something is wrong :(", error);
-      });
-  }, []);
+    if (data !== undefined) {
+      setToCurrencyEl([obj, ...data]);
+    }
+  }, [data]);
 
   useEffect(() => {
     const currencyExchange = currencyEl?.map((el) => el.rate);

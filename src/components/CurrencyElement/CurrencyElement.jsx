@@ -1,5 +1,3 @@
-import { React } from "react";
-
 import css from "./CurrencyElement.module.css";
 
 function CurrencyElement({
@@ -14,7 +12,7 @@ function CurrencyElement({
     <div className={css.box}>
       <label className={css.label}>{currentCurrencyName}</label>
       <select
-        className={css.select}
+        className={`${css.select} ${css.block}`}
         value={selectCurrency}
         onChange={(e) => handleChangeCurrency(e.target.value)}
       >
@@ -25,7 +23,7 @@ function CurrencyElement({
         ))}
       </select>
       <input
-        className={css.input}
+        className={`${css.input} ${css.block}`}
         type="number"
         value={sum}
         onChange={(e) => handleChangeSum(e.target.value)}
